@@ -1,24 +1,15 @@
 import type { Metadata } from "next";
 import { Ubuntu, DM_Sans } from "next/font/google";
-import "@/styles/nextjs-fixes.css";
 
 /*
  * The template's style.css declares:
  *   --heading-font: "Ubuntu", sans-serif;
  *   --body-font: "DM Sans", sans-serif;
  * and every rule references them through var(). style.css is byte-identical
- * to the source and must not be edited, so the font loaders publish their
- * families under those exact same variable names, applied to <html> via the
- * class list.
- *
- * Cascade note (verified against the built output, not assumed): Next emits
- * its font CSS as a stylesheet BEFORE the <link>s below, and
- * `.ubuntu_..._variable` and `:root` have equal specificity, so style.css's
- * `:root` declarations actually win the tie. Text still renders in the right
- * faces because next/font names the self-hosted @font-face families literally
- * "Ubuntu" and "DM Sans", which is exactly what style.css asks for. What is
- * lost is only next/font's metric-adjusted fallback ("Ubuntu Fallback" /
- * "DM Sans Fallback"), which would have reduced layout shift during swap.
+ * to the source and must not be edited, so the loaders publish their families
+ * under neutral names and public/css/nextjs-fixes.css re-points the template's
+ * two variables at them. That file is <link>ed last, so its :root rule wins
+ * the specificity tie against style.css's.
  */
 
 // Matches the template's Google Fonts request: Ubuntu:wght@300;400;500;700
@@ -27,7 +18,7 @@ const ubuntu = Ubuntu({
   weight: ["300", "400", "500", "700"],
   style: ["normal"],
   display: "swap",
-  variable: "--heading-font",
+  variable: "--font-ubuntu",
 });
 
 // Matches: DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000
@@ -36,7 +27,7 @@ const dmSans = DM_Sans({
   style: ["normal", "italic"],
   axes: ["opsz"],
   display: "swap",
-  variable: "--body-font",
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
@@ -59,6 +50,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/assets/css/plugins/aos.css" />
         <link rel="stylesheet" href="/assets/css/spacings.css" />
         <link rel="stylesheet" href="/assets/css/style.css" />
+        {/* Loaded last on purpose — see the file header. */}
+        <link rel="stylesheet" href="/css/nextjs-fixes.css" />
       </head>
       <body>{children}</body>
     </html>

@@ -44,7 +44,7 @@ with a single item, so `has-children` on it is redundant.
    genuinely loads last, with a comment explaining what it patches and why.
    Note: ESM-imported CSS is emitted with `data-precedence` ahead of `<head>`
    children, so the fixes file must be a `<link>`, not an import.
-   
+
 2. **No Tailwind.** Do not install it, do not add utility classes.
 
 3. **No jQuery.** Any jQuery-dependent behaviour is rewritten as React using
@@ -62,12 +62,39 @@ with a single item, so `has-children` on it is redundant.
 
 6. **Sliders** use `swiper/react`, not the vanilla Swiper bundle. Slider config
    (loop, breakpoints, speed, autoplay, effect, pagination, navigation) must
-   match the template's Slick options exactly. Per the Addendum, sliders appear
-   on `about.html` and `blog-details.html` only, and all are plain horizontal
-   `slidesToShow` carousels. The hero vertical sliders, service slider, project
-   slider, testimonial-slider-two and the testimonial progress line live only
-   on `index-2`/`index-3` and are out of scope. Slick's variable-width and
-   vertical-autoplay configurations are therefore not needed.
+   match the template's Slick options exactly. Sliders appear on `index.html`
+   (`.clients-slider`, `.testimonial-slider`) and `about.html`
+   (`.clients-slider`, `.testimonial-slider-three`) only — four in total, all
+   plain horizontal, all `dots:false`. The hero vertical sliders, service
+   slider, project slider, testimonial-slider-two and the testimonial progress
+   line live only on `index-2`/`index-3` and are out of scope, so Slick's
+   variable-width and vertical-autoplay configs are not needed.
+
+   **Class strategy (decided):** keep both class sets. The container renders as
+   `<Swiper className="clients-slider slick-slider slick-initialized">` and
+   each slide as `<SwiperSlide className="orbia-client-item style-one
+   slick-slide">` — item classes go on the `SwiperSlide` itself, not a child,
+   because Slick applies `.slick-slide` to the item element directly. Arrows
+   render as `<div className="prev slick-arrow">` / `<div className="next
+   slick-arrow">` inside the template's existing `.testimonial-arrows`
+   element. Do NOT add `slick-list` or `slick-track` to `.swiper-wrapper`, and
+   do NOT use Swiper's `slideClass`/`wrapperClass` options — overriding
+   `slideClass` stops Swiper emitting `.swiper-slide` and collapses its layout.
+   No slider CSS is ever written into `nextjs-fixes.css`; the template
+   stylesheet remains the only source of truth for slider appearance.
+
+   **Known trap:** `swiper/css` is ESM-imported and lands in the
+   `data-precedence` chunk ahead of all template CSS, so `slick.css`'s
+   `.slick-slide{display:none}` beats `.swiper-slide{display:block}` at equal
+   specificity. `.slick-initialized` on the container is what makes slides
+   visible (`.slick-initialized .slick-slide` is 0,2,0). It is required, not
+   cosmetic.
+
+   **Recorded divergence:** Slick's post-init DOM is
+   `.slick-list > .slick-track > slide`; Swiper's is `.swiper-wrapper > slide`.
+   No in-scope rule targets `.slick-list` or `.slick-track` for anything but
+   structure, so nothing visual depends on it, but the wrapper depth does
+   differ from the template.
 
 7. **Images**: plain `<img>` with the original classes by default. Only use
    `next/image` where explicitly requested — it changes the DOM and breaks
