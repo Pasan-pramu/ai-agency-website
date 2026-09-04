@@ -7,16 +7,44 @@ App Router with TypeScript. This is a real company website. The visual output
 must be pixel-identical to the source template.
 
 - Source template: `/template` (gitignored, read-only — never edit it)
+- Template root: `template/ai-agency-technology-html-template/orbia`
 - Next.js App Router, TypeScript, no `src/` dir, import alias `@/*`
 - Template assets are served from `public/assets/`
 
+### Scope
+
+In scope, 14 pages: `index`, `about`, `services`, `service-details`,
+`projects`, `project-details`, `team`, `team-details`, `blog-standard`
+(routed as `/blog`), `blog-details`, `contact`, `faqs`, `pricing`, `404`.
+
+Out of scope: `index-2`, `index-3`, `blog-grid`, `Documentation`. Their three
+nav entries are deleted from the header (source lines 78, 79, 102), which
+removes every dead internal link in the site. The Home submenu is then left
+with a single item, so `has-children` on it is redundant.
+
+### Layout facts (from the Addendum)
+
+- Header and footer are shared, with two variants: `home` and `inner`.
+  Differences are three lines only — `page-header` in the header class list,
+  drawer CTA `gradient-btn` vs `style-one`, and footer `pt-120`.
+- There is no active-nav state anywhere in the template. Do not add one.
+- The breadcrumb block is identical across all 13 inner pages apart from two
+  text nodes, so it takes `title` and `crumb` as separate props (they differ
+  on 4 of 13 pages, e.g. "Our Services" / "Services").
+- Two pre-existing source bugs to fix during conversion, not carry over:
+  `index.html:1166` has `href="mail:info@exmple.com"` (missing `to`, typo'd
+  domain), and `team-details.html:184` has a bare email address with no
+  `mailto:` scheme.
+
 ## Hard rules
 
-1. **Never modify the template's own CSS.** Copy stylesheets verbatim into
-   `public/assets/css/` and leave them byte-identical. Any fix needed for
-   Next.js goes in `styles/nextjs-fixes.css`, loaded last, with a comment
-   explaining what it patches and why.
-
+1. **Never modify the template's own CSS.** Template stylesheets live in
+   `public/assets/css/` and stay byte-identical. Any fix needed for Next.js
+   goes in `public/css/nextjs-fixes.css`, `<link>`ed after `style.css` so it
+   genuinely loads last, with a comment explaining what it patches and why.
+   Note: ESM-imported CSS is emitted with `data-precedence` ahead of `<head>`
+   children, so the fixes file must be a `<link>`, not an import.
+   
 2. **No Tailwind.** Do not install it, do not add utility classes.
 
 3. **No jQuery.** Any jQuery-dependent behaviour is rewritten as React using
@@ -24,7 +52,7 @@ must be pixel-identical to the source template.
    be identical, including timing, easing and delays.
 
 4. **Preserve markup exactly.** Class names, element order, nesting depth,
-   `id`s, `data-wow-*`, `data-*` and ARIA attributes are copied as-is from the
+   `id`s, `data-aos`, `data-*` and ARIA attributes are copied as-is from the
    source HTML. Convert only what JSX requires: `class` → `className`,
    `for` → `htmlFor`, self-closing tags, inline `style` strings → objects.
    Do not "clean up", rename, simplify or de-duplicate markup.
@@ -34,7 +62,12 @@ must be pixel-identical to the source template.
 
 6. **Sliders** use `swiper/react`, not the vanilla Swiper bundle. Slider config
    (loop, breakpoints, speed, autoplay, effect, pagination, navigation) must
-   match the template's JS options exactly.
+   match the template's Slick options exactly. Per the Addendum, sliders appear
+   on `about.html` and `blog-details.html` only, and all are plain horizontal
+   `slidesToShow` carousels. The hero vertical sliders, service slider, project
+   slider, testimonial-slider-two and the testimonial progress line live only
+   on `index-2`/`index-3` and are out of scope. Slick's variable-width and
+   vertical-autoplay configurations are therefore not needed.
 
 7. **Images**: plain `<img>` with the original classes by default. Only use
    `next/image` where explicitly requested — it changes the DOM and breaks
@@ -47,6 +80,14 @@ must be pixel-identical to the source template.
 9. **Verification**: after converting a page, structurally diff it against its
    source HTML (element sequence + class lists) and report any divergence.
    Report honestly; do not claim parity you have not checked.
+
+10. **No Bootstrap JavaScript.** `bootstrap.min.css` is kept and never edited.
+    `bootstrap.min.js` and `popper.min.js` are not used. The four behaviours
+    that depended on them (search modal, project accordion, FAQ accordion,
+    team tabs) are rewritten as React components that produce identical DOM,
+    identical classes, and identical `aria-*` attribute states. Bootstrap's
+    CSS drives all visual output; React only toggles the same classes and
+    attributes Bootstrap would have.   
 
 ## TypeScript
 

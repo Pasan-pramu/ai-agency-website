@@ -1,0 +1,44 @@
+/* ==========================================================================
+   nextjs-fixes.css
+
+   The only stylesheet in this project that we are allowed to author.
+
+   The template's own CSS (assets/css/style.css, spacings.css and the vendor
+   files under assets/css/plugins/) is copied verbatim from the purchased
+   Envato template and must stay byte-identical — see AGENTS.md, hard rule 1.
+   Anything that needs to change for the Next.js/React build goes here
+   instead.
+
+   It lives in public/ and is <link>ed immediately after style.css rather than
+   being ESM-imported, because Next emits imported CSS with data-precedence
+   ahead of the <head>'s own children — an import would load FIRST, not last,
+   and lose every cascade tie it is supposed to win.
+
+   Every rule added below must carry a comment saying what it patches and why.
+   Nothing speculative: a rule belongs here only once a concrete Next.js
+   -specific problem has been observed.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fonts: bridge next/font's generated families onto the template's variables.
+
+   style.css:59-60 hardcodes:
+       --heading-font: "Ubuntu", sans-serif;
+       --body-font: "DM Sans", sans-serif;
+   and every rule in the template reads them through var(). style.css is
+   byte-identical to the source and must not be edited.
+
+   next/font self-hosts the faces and publishes them as --font-ubuntu and
+   --font-dm-sans, each carrying a metric-adjusted fallback ("Ubuntu Fallback",
+   "DM Sans Fallback") sized to match the real face so text does not reflow
+   when the webfont swaps in.
+
+   Redefining the template's two variables here re-points every existing var()
+   reference at the next/font families — fallbacks included — without touching
+   style.css. This file loads after style.css, so these declarations win the
+   specificity tie between the two :root rules.
+   -------------------------------------------------------------------------- */
+:root {
+  --heading-font: var(--font-ubuntu), sans-serif;
+  --body-font: var(--font-dm-sans), sans-serif;
+}
