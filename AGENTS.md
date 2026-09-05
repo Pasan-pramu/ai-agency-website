@@ -186,6 +186,23 @@ These are intentional. Do not "correct" them.
   rule 6 forbids writing slider CSS into `nextjs-fixes.css`. Measured slide
   widths match the images' intrinsic widths exactly (630/300/300px).
 
+- Home page section order diverges from `index.html`. Four sections are ported
+  in from `index-3.html` (`orbia-fact-sec`, `orbia-about_three`, `orbia-we_one`,
+  `orbia-project_three`) and `orbia-team_two` replaces `index.html`'s tabbed
+  `orbia-team_one`. `orbia-project_three` does not sit where index-3 puts it
+  either: it was moved to sit between `orbia-choose_one` and `orbia-client-sec`.
+  `orbia-about_one` is deliberately kept alongside `orbia-about_three` pending a
+  decision on which to drop.
+- `orbia-project_three` carries `gray-bg`, which `index.html` uses nowhere —
+  it appears only on `about.html`, `services.html` and `index-3.html` in the
+  template. The class itself is the template's own (`style.css:289`,
+  `background-color: var(--gray-color)` = `#F8F8F8`); no new CSS was written.
+  Note the section directly above it, `orbia-choose_one`, has no background of
+  its own — its inner `.orbia-choose-wrapper` is a dark inset card
+  (`--heading-color` `#010F34` plus a `bg_cover` image, 30px side margins,
+  30px radius), so the grey band sits under a floating dark card rather than
+  butting against a full-bleed colour.
+
 ### Source bugs preserved on purpose
 
 - Resizing past 991px clears `overlay-open` but leaves `active` and `menu-on`,

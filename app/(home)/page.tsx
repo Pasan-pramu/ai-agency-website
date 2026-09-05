@@ -22,6 +22,10 @@ import ProjectSliderThree from "@/app/components/layout/ProjectSliderThree";
  * placed *after* that group so the two About treatments can be compared. One of
  * them is expected to be dropped.
  *
+ * orbia-project_three has since been moved out of that group to sit between
+ * orbia-choose_one and orbia-client-sec, and given `gray-bg`. Both are
+ * deliberate divergences — index.html uses gray-bg nowhere. See AGENTS.md.
+ *
  * Stays a server component (rule 8). Five interactive leaves: ServiceCards,
  * ProjectAccordion, ProjectSliderThree, ClientsSlider, TestimonialSliderOne.
  * The team section is TeamSectionTwo (index-3's static `.orbia-team_two`),
@@ -447,26 +451,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/*======  Start Project Section  ======*/}
-      <section className="orbia-project_three pt-115 pb-120">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-5">
-              {/* Section Title */}
-              <div className="section-title mb-40" data-aos="fade-up" data-aos-duration="1000">
-                <span className="sub-title">Our Work in Action</span>
-              </div>
-            </div>
-            <div className="col-lg-7">
-              {/* Section Title */}
-              <div className="section-title mb-45" data-aos="fade-up" data-aos-duration="1000">
-                <h2>Explore how we&rsquo;ve helped brands and creators </h2>
-              </div>
-            </div>
-          </div>
-          <ProjectSliderThree />
-        </div>
-      </section>
       {/*======  Start About Section  ======*/}
       <section className="orbia-about_one pt-90 pb-120">
         <div className="shape">
@@ -667,6 +651,26 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      {/*======  Start Project Section  ======*/}
+      <section className="orbia-project_three gray-bg pt-115 pb-120">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-5">
+              {/* Section Title */}
+              <div className="section-title mb-40" data-aos="fade-up" data-aos-duration="1000">
+                <span className="sub-title">Our Work in Action</span>
+              </div>
+            </div>
+            <div className="col-lg-7">
+              {/* Section Title */}
+              <div className="section-title mb-45" data-aos="fade-up" data-aos-duration="1000">
+                <h2>Explore how we&rsquo;ve helped brands and creators </h2>
+              </div>
+            </div>
+          </div>
+          <ProjectSliderThree />
         </div>
       </section>
       {/*====== Start Client Section ======*/}
