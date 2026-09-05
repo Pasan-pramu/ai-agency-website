@@ -46,6 +46,13 @@ import "swiper/css";
  * the DOM and restores continuous scrolling. The alternative is loop:false, which
  * would visibly break a carousel the template scrolls forever.
  *
+ * AOS note (verified, not a bug): the source puts data-aos on the slider
+ * container. Swiper writes its own classes onto it and React re-renders, so
+ * AOS's `aos-init` does not persist — but `aos-animate` is what aos.css uses
+ * to lift `[data-aos^="fade"]{opacity:0}`, and AOS re-adds it on every
+ * throttled scroll tick. Measured: opacity 0 while below the fold (correct),
+ * opacity 1 once scrolled to. No intervention needed.
+ *
  * Class strategy per AGENTS.md rule 6: both class sets, item classes on the
  * SwiperSlide itself, no slideClass/wrapperClass, no slick-list/slick-track.
  * `slick-initialized` on the container is load-bearing — without it
