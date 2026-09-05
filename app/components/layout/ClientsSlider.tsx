@@ -57,7 +57,9 @@ const SOURCE_LOGOS = [1, 2, 3, 4, 5, 3];
 // Rendered twice so Swiper's loop mode has enough slides — see the header.
 const LOGOS = [...SOURCE_LOGOS, ...SOURCE_LOGOS];
 
-export default function ClientsSlider() {
+/* about.html's container carries data-aos="fade-up" data-aos-duration="1000";
+   index.html's carries neither. Both are reproduced exactly via this prop. */
+export default function ClientsSlider({ aos = false }: { aos?: boolean }) {
   return (
     /* Client Slider */
     <Swiper
@@ -75,8 +77,7 @@ export default function ClientsSlider() {
         1200: { slidesPerView: 4 },
         1450: { slidesPerView: 5 },
       }}
-      data-aos="fade-up"
-      data-aos-duration="1000"
+      {...(aos ? { "data-aos": "fade-up", "data-aos-duration": "1000" } : {})}
     >
       {LOGOS.map((n, i) => (
         /* Orbia Client Item */

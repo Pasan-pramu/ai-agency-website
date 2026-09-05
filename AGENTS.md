@@ -138,6 +138,24 @@ These are intentional. Do not "correct" them.
 - `data-src` backgrounds render as server-side inline styles alongside the
   preserved `data-src` attribute, reproducing what `dynamicBackground()`
   (theme.js:431) produces at runtime, with no client JS and no unpainted frame.
+- Slider slide sets are rendered twice (6→12 clients, 4→8 testimonials).
+  Swiper 14's `loop` silently declines to engage below roughly 2×
+  `slidesPerView` and emits no warning; both sliders were dead on first build.
+  Slick achieved `infinite: true` by cloning slides into the DOM, so the
+  duplicated set is closer to Slick's runtime DOM than `loop: false` would be
+  to its behaviour. `spaceBetween` stays 0 — gutters come from
+  `style.css:6489` and `:5639` via the `slick-slide` class; setting
+  `spaceBetween` writes inline margins that override the template's.
+- `mfp-fade` has no CSS anywhere in the template (Magnific ships those
+  keyframes as a docs snippet the vendor never pasted). The class is
+  reproduced but is inert — there is no fade. Writing the missing keyframes
+  would add a feature, not patch Next.js.
+- SplitText now runs on all 13 pages via a hook called from `SmoothScroll`,
+  which owns the `#smooth-content` ref. As a child component it produced
+  ~400 "Invalid scope" warnings, because React attaches a parent's ref only
+  after its children's layout effects run. Footer `.text-anm` headings on the
+  12 earlier pages were previously static and now animate, matching the
+  template.
 
 ### Source bugs preserved on purpose
 
