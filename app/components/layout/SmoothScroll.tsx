@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
+import { useTextAnm } from "./SplitTextAnim";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -26,6 +27,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother);
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   const wrapper = useRef<HTMLDivElement | null>(null);
+  const content = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
     () => {
@@ -38,9 +40,13 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     { scope: wrapper },
   );
 
+  /* theme.js runs SplitText over every .text-anm on the page; both <main> and
+     the footer contain some, and #smooth-content is their common ancestor. */
+  useTextAnm(content);
+
   return (
     <div id="smooth-wrapper" ref={wrapper}>
-      <div id="smooth-content">{children}</div>
+      <div id="smooth-content" ref={content}>{children}</div>
     </div>
   );
 }
