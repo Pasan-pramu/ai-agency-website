@@ -10,10 +10,19 @@ import { slideToggle, slideUp } from "./slide";
  * desktop bar and the mobile drawer — style.css:1246 turns it into the 290px
  * off-canvas panel at max-width 1199.98px, and `.menu-on` slides it in.
  *
- * The three nav entries for the dropped pages are removed: index-2.html (source
- * line 78), index-3.html (line 79) and blog-grid.html (line 102). `has-children`
- * is dropped from the Home item per AGENTS.md. No active/current state is added
- * — the template has none anywhere.
+ * NAV RESTRUCTURED — this no longer matches the template's menu. On top of the
+ * three entries removed for the dropped pages (index-2 source line 78, index-3
+ * line 79, blog-grid line 102), the menu has been flattened:
+ *   Home     submenu removed (its single "Home One" duplicated the parent)
+ *   Services submenu removed, href # -> /services
+ *   Blog     submenu removed, href # -> /blog
+ *   Pages    keeps its dropdown, minus Project Details, Team Details and 404
+ * The four detail pages (/service-details, /project-details, /team-details,
+ * /blog-details) all still exist and stay reachable from their listing pages;
+ * they are simply no longer in the nav. /404 is no longer linked from anywhere,
+ * but app/not-found.tsx still serves genuinely missing paths. See AGENTS.md.
+ *
+ * No active/current state is added — the template has none anywhere.
  *
  * The `.dd-trigger` spans are injected by jQuery at theme.js:54-60 into every
  * `li a` inside `.theme-nav-menu` that has a next sibling. They are server
@@ -29,50 +38,21 @@ type MenuItem = {
 };
 
 const MENU: MenuItem[] = [
-  {
-    label: "Home",
-    href: "/",
-    // has-children intentionally dropped: the submenu is a single entry once
-    // Home Two and Home Three are gone.
-    children: [{ label: "Home One", href: "/" }],
-  },
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  {
-    label: "Services",
-    href: "#",
-    hasChildren: true,
-    children: [
-      { label: "Our Services", href: "/services" },
-      { label: "Service Details", href: "/service-details" },
-    ],
-  },
+  { label: "Services", href: "/services" },
   {
     label: "Pages",
     href: "#",
     hasChildren: true,
     children: [
       { label: "Projects", href: "/projects" },
-      { label: "Project Details", href: "/project-details" },
       { label: "Our Team", href: "/team" },
-      { label: "Team Details", href: "/team-details" },
       { label: "Pricing", href: "/pricing" },
       { label: "Faqs", href: "/faqs" },
-      // No /404 route exists: app/not-found.tsx is Next's not-found
-      // boundary, so this path genuinely 404s and renders the template's
-      // error page with a real 404 status. The entry is kept because the
-      // scope decision names only three nav items for deletion.
-      { label: "404", href: "/404" },
     ],
   },
-  {
-    label: "Blog",
-    href: "#",
-    hasChildren: true,
-    children: [
-      { label: "Blog Standard", href: "/blog" },
-      { label: "Blog Details", href: "/blog-details" },
-    ],
-  },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 

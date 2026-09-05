@@ -203,6 +203,22 @@ These are intentional. Do not "correct" them.
   30px radius), so the grey band sits under a floating dark card rather than
   butting against a full-bleed colour.
 
+- The header nav no longer matches the template's. Beyond the three entries
+  removed for the dropped pages, it has been flattened: Home loses its
+  single-entry submenu (which duplicated the parent), Services and Blog lose
+  their submenus and point straight at `/services` and `/blog` instead of `#`,
+  and Pages keeps its dropdown minus Project Details, Team Details and 404.
+  Final nav: Home `/`, About `/about`, Services `/services`, Pages (dropdown:
+  Projects, Our Team, Pricing, Faqs), Blog `/blog`, Contact `/contact`. Only one
+  `has-children`, one `.dd-trigger` and one `.sub-menu` remain in the whole menu.
+- No page or route was deleted. `/service-details`, `/project-details`,
+  `/team-details` and `/blog-details` all still exist and are **reachable only
+  from their listing pages** — the cards on `/services`, `/projects`, `/team`
+  and `/blog` still link to them. They are simply no longer in the nav.
+- `/404` is no longer linked from anywhere on the site. `app/not-found.tsx`
+  still serves genuinely missing paths with a real 404 status, so the page is
+  live but unreachable by navigation.
+
 ### Source bugs preserved on purpose
 
 - Resizing past 991px clears `overlay-open` but leaves `active` and `menu-on`,
