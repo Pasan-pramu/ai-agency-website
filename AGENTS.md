@@ -62,13 +62,29 @@ with a single item, so `has-children` on it is redundant.
 
 6. **Sliders** use `swiper/react`, not the vanilla Swiper bundle. Slider config
    (loop, breakpoints, speed, autoplay, effect, pagination, navigation) must
-   match the template's Slick options exactly. Sliders appear on `index.html`
-   (`.clients-slider`, `.testimonial-slider`) and `about.html`
-   (`.clients-slider`, `.testimonial-slider-three`) only — four in total, all
-   plain horizontal, all `dots:false`. The hero vertical sliders, service
-   slider, project slider, testimonial-slider-two and the testimonial progress
-   line live only on `index-2`/`index-3` and are out of scope, so Slick's
-   variable-width and vertical-autoplay configs are not needed.
+   match the template's Slick options exactly. **Five sliders**, all horizontal,
+   all `dots:false`:
+   - `index.html` — `.clients-slider`, `.testimonial-slider` (2-up)
+   - `about.html` — `.clients-slider`, `.testimonial-slider-three` (3-up)
+   - `.project-slider`, ported onto the home page from `index-3.html`
+     (`theme.js:218-245`). This one is `variableWidth: true`, mapped to
+     `slidesPerView: "auto"` with an inline `width:auto` on each slide, because
+     Swiper's own `.swiper-slide{width:100%}` would otherwise collapse it to one
+     full-width slide. Its source `responsive` table is inverted (default 2,
+     `<1200` raises it to 3) and also inert — `variableWidth` is never
+     overridden by the responsive blocks, so `slidesToShow` governs nothing.
+     Reproduced as written; not corrected.
+
+   **`.slick-current` is load-bearing on `.project-slider`.** `style.css:4630`
+   and `:4634` reveal the overlay on the *active* slide. Swiper emits
+   `.swiper-slide-active` instead, so the component mirrors the active slide
+   onto `.slick-current` on init and on every slide change. This is the only
+   Slick *state* class any in-scope slider depends on; the `:hover` fallback at
+   `:4638`/`:4642` is pure CSS and needs nothing.
+
+   The hero vertical sliders, service slider, testimonial-slider-two and the
+   testimonial progress line live only on `index-2`/`index-3` and remain out of
+   scope, so Slick's vertical-autoplay config is not needed.
 
    **Class strategy (decided):** keep both class sets. The container renders as
    `<Swiper className="clients-slider slick-slider slick-initialized">` and
@@ -138,7 +154,8 @@ These are intentional. Do not "correct" them.
 - `data-src` backgrounds render as server-side inline styles alongside the
   preserved `data-src` attribute, reproducing what `dynamicBackground()`
   (theme.js:431) produces at runtime, with no client JS and no unpainted frame.
-- Slider slide sets are rendered twice (6→12 clients, 4→8 testimonials).
+- Slider slide sets are rendered twice (6→12 clients, 4→8 testimonials,
+  3→6 project).
   Swiper 14's `loop` silently declines to engage below roughly 2×
   `slidesPerView` and emits no warning; both sliders were dead on first build.
   Slick achieved `infinite: true` by cloning slides into the DOM, so the
@@ -156,6 +173,18 @@ These are intentional. Do not "correct" them.
   after its children's layout effects run. Footer `.text-anm` headings on the
   12 earlier pages were previously static and now animate, matching the
   template.
+
+- `.slick-current` is synthesised on `.project-slider`. Swiper emits
+  `.swiper-slide-active`, which `style.css:4630`/`:4634` do not match, so the
+  component copies the active slide onto `.slick-current` imperatively on init
+  and on every slide change. Imperative rather than React state because Swiper
+  physically reorders slide nodes in loop mode, so a render-index key would put
+  the class on the wrong element.
+- Each `.project-slider` slide carries an inline `width:auto` that the source
+  does not have. Slick's `variableWidth:true` shrink-wraps floated slides around
+  their content; Swiper's `.swiper-slide{width:100%}` would defeat that, and
+  rule 6 forbids writing slider CSS into `nextjs-fixes.css`. Measured slide
+  widths match the images' intrinsic widths exactly (630/300/300px).
 
 ### Source bugs preserved on purpose
 

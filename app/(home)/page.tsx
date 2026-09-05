@@ -3,7 +3,8 @@ import ServiceCards, { type ServiceCard } from "@/app/components/layout/ServiceC
 import ProjectAccordion, { type ProjectItem } from "@/app/components/layout/ProjectAccordion";
 import ClientsSlider from "@/app/components/layout/ClientsSlider";
 import TestimonialSliderOne from "@/app/components/layout/TestimonialSliderOne";
-import TeamSection from "@/app/components/layout/TeamSection";
+import TeamSectionTwo from "@/app/components/layout/TeamSectionTwo";
+import ProjectSliderThree from "@/app/components/layout/ProjectSliderThree";
 
 /*
  * index.html, lines 147-1239. Twelve sections, the largest page in the template
@@ -11,12 +12,24 @@ import TeamSection from "@/app/components/layout/TeamSection";
  * Uses the `home` shell variant via app/(home)/layout.tsx: no `page-header` on
  * <header>, no `pt-120` on <footer>, drawer CTA `gradient-btn`.
  *
- * Stays a server component (rule 8). Four interactive leaves: ServiceCards,
- * ProjectAccordion, ClientsSlider, TestimonialSliderOne, plus TeamTabs inside
- * the shared TeamSection.
+ * Four sections are additionally ported in from index-3.html and sit between the
+ * hero and the existing About section:
+ *   orbia-fact-sec      index-3.html:226-274
+ *   orbia-about_three   index-3.html:277-293
+ *   orbia-we_one        index-3.html:295-361
+ *   orbia-project_three index-3.html:507-562
+ * OPEN DECISION: index.html's own `orbia-about_one` is deliberately kept and
+ * placed *after* that group so the two About treatments can be compared. One of
+ * them is expected to be dropped.
  *
- * Seven page-body [data-src] backgrounds (150, 236, 431, 610, 797, 841, 1089)
- * render as server-side inline styles alongside the preserved attribute.
+ * Stays a server component (rule 8). Five interactive leaves: ServiceCards,
+ * ProjectAccordion, ProjectSliderThree, ClientsSlider, TestimonialSliderOne.
+ * The team section is TeamSectionTwo (index-3's static `.orbia-team_two`),
+ * replacing the tabbed TeamSection, which /about still uses unchanged.
+ *
+ * Nine page-body [data-src] backgrounds render as server-side inline styles
+ * alongside the preserved attribute — the seven from index.html plus the two
+ * fact-card backgrounds from index-3.
  *
  * DIVERGENCE (AGENTS.md): source line 1166 is
  *     <a href="mail:info@exmple.com">info@exmple.com</a>
@@ -38,6 +51,9 @@ const TESTIMONIAL_SHAPE = "/assets/images/home-one/testimonial/testimonial-shape
 const PRICING_BG = "/assets/images/home-one/bg/pricing-bg.jpg";
 const PRICING_BG2 = "/assets/images/home-one/bg/pricing-bg2.jpg";
 const CONTACT_BG = "/assets/images/home-one/bg/contact-bg.jpg";
+/* index-3.html sections added to the home page */
+const FACT_BG = "/assets/images/home-three/gallery/fact-bg.jpg";
+const FACT_BG2 = "/assets/images/home-three/gallery/fact-bg2.jpg";
 
 /* Placeholder — replace with the real address (see the divergence note above). */
 const CONTACT_EMAIL = "info@example.com";
@@ -216,6 +232,239 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      {/*======  Start Fact Section  ======*/}
+      <section className="orbia-fact-sec pt-100">
+        <div className="container-fluid">
+          <div className="row justify-content-center">
+            <div className="col-xl-4">
+              {/* Orbia Fact Item */}
+              <div
+                className="orbia-fact-item bg_cover mb-40"
+                data-src={FACT_BG}
+                style={{ backgroundImage: `url(${FACT_BG})` }}
+                data-aos="fade-up"
+                data-aos-duration="800"
+              >
+                <div className="content">
+                  <h3>API integration to your business model for effective working</h3>
+                  <p>
+                    Offering continuous maintenance, monitoring, and support to ensure
+                    peak system performance and swift issue resolution.
+                  </p>
+                  <Link href="/about" className="read-more style-one">
+                    Explore More<i className="far fa-arrow-right"></i>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-4">
+              {/* Orbia Fact Item */}
+              <div className="orbia-fact-item-two mb-40" data-aos="fade-up" data-aos-duration="1000">
+                <div className="shape">
+                  <img src="/assets/images/home-three/gallery/fact-shape.png" alt="shape" />
+                </div>
+                <div className="content">
+                  <h3>Automated Language Understanding</h3>
+                  <div className="counter-wrap">
+                    <div className="counter-box">
+                      <h2>285+</h2>
+                      <p>Active Visitor Per day</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-4">
+              {/* Orbia Fact Item */}
+              <div
+                className="orbia-fact-item bg_cover mb-40"
+                data-src={FACT_BG2}
+                style={{ backgroundImage: `url(${FACT_BG2})` }}
+                data-aos="fade-up"
+                data-aos-duration="1200"
+              >
+                <div className="content">
+                  <h3>Accompanying documentation for all services and products</h3>
+                  <div className="orbia-avatar-box">
+                    <div className="avatar-list">
+                      <ul>
+                        {[1, 2, 3].map((n) => (
+                          <li key={n}>
+                            <img
+                              src={`/assets/images/home-three/gallery/avatar-img${n}.jpg`}
+                              alt="avatar-img1"
+                            />
+                          </li>
+                        ))}
+                        <li>
+                          <span>10+</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="number">20K</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/*======  Start About Section  ======*/}
+      <section className="orbia-about_three pt-65">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              {/* Orbia Text Box */}
+              <div className="orbia-text-box text-center" data-aos="fade-up" data-aos-duration="1000">
+                <h2>
+                  Discover the Power of All Image{" "}
+                  <span>
+                    <img
+                      src="/assets/images/home-three/about/about-img1.jpg"
+                      className="image_one"
+                      alt="image"
+                    />
+                  </span>{" "}
+                  Creation and
+                  <span className="fill-text">
+                    {" "}
+                    See How{" "}
+                    <span>
+                      <img src="/assets/images/home-three/about/about-img2.png" alt="image" />
+                    </span>{" "}
+                    Imagination and Technology Blend
+                  </span>{" "}
+                  to Create Enthralling Visual Boundaries{" "}
+                  <span>
+                    <img
+                      src="/assets/images/home-three/about/about-img3.jpg"
+                      className="image_one"
+                      alt="image"
+                    />
+                  </span>
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/*======  Start Who We Section  ======*/}
+      <section className="orbia-we_one pb-120 pt-120">
+        <div className="shape">
+          <img
+            src="/assets/images/home-three/gallery/we-shape1.png"
+            className="animate-float-bob-y"
+            alt="shape"
+          />
+        </div>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-xl-6 col-lg-8 col-md-10">
+              {/* Orbia Image Box */}
+              <div className="orbia-image-box mb-5 mb-xl-0" data-aos="fade-up" data-aos-duration="1000">
+                <div className="orbia-image">
+                  <img src="/assets/images/home-three/gallery/we-img1.jpg" alt="we image" />
+                </div>
+                <div className="orbia-client-box">
+                  <div className="thumb">
+                    <img src="/assets/images/home-three/gallery/we-img2.jpg" alt="we image" />
+                  </div>
+                  <div className="content">
+                    <h3>435+</h3>
+                    <h5>
+                      Creative Specialist <br /> in our team
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-6 col-lg-8 col-md-10">
+              {/* Orbia Content Box */}
+              <div className="orbia-content-box">
+                {/* Section Title */}
+                <div className="section-title">
+                  <span className="sub-title" data-aos="fade-down" data-aos-duration="1000">
+                    Who WE ARE
+                  </span>
+                  <h2 className="text-anm">Redefining Creativity with the Power of AI.</h2>
+                </div>
+                <p data-aos="fade-up" data-aos-duration="1200">
+                  We are a cutting-edge AI agency passionate about turning imagination
+                  into reality. Our mission is to empower businesses, creators, and
+                  innovators{" "}
+                </p>
+                <div className="iconic-box-wrapper">
+                  <div className="row">
+                    <div className="col-md-6 item-column" data-aos="fade-up" data-aos-duration="1400">
+                      <div className="orbia-iconic-left-box style-two mb-40">
+                        <div className="icon">
+                          <img src="/assets/images/home-three/icon/icon1.png" alt="icon" />
+                        </div>
+                        <div className="content">
+                          <h5>
+                            AI-Powered <br /> Innovation
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 item-column" data-aos="fade-up" data-aos-duration="1600">
+                      <div className="orbia-iconic-left-box style-two mb-40">
+                        <div className="icon">
+                          <img src="/assets/images/home-three/icon/icon2.png" alt="icon" />
+                        </div>
+                        <div className="content">
+                          <h5>
+                            Limitless <br /> Styles
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ul className="check-list style-one mb-40" data-aos="fade-up" data-aos-duration="1800">
+                  <li>
+                    <i className="fas fa-check-circle"></i>Harnessing advanced models
+                    for unmatched creativity.
+                  </li>
+                  <li>
+                    <i className="fas fa-check-circle"></i>From ultra-realistic to
+                    artistic, fantasy, and futuristic.
+                  </li>
+                  <li>
+                    <i className="fas fa-check-circle"></i>Generate visuals in seconds,
+                    for individuals or enterprises.
+                  </li>
+                </ul>
+                <div className="orbia-button" data-aos="fade-up" data-aos-duration="2000">
+                  <Link href="/about" className="theme-btn style-one">
+                    Get Started Now <i className="far fa-arrow-right"></i>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/*======  Start Project Section  ======*/}
+      <section className="orbia-project_three pt-115 pb-120">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-5">
+              {/* Section Title */}
+              <div className="section-title mb-40" data-aos="fade-up" data-aos-duration="1000">
+                <span className="sub-title">Our Work in Action</span>
+              </div>
+            </div>
+            <div className="col-lg-7">
+              {/* Section Title */}
+              <div className="section-title mb-45" data-aos="fade-up" data-aos-duration="1000">
+                <h2>Explore how we&rsquo;ve helped brands and creators </h2>
+              </div>
+            </div>
+          </div>
+          <ProjectSliderThree />
         </div>
       </section>
       {/*======  Start About Section  ======*/}
@@ -688,7 +937,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <TeamSection />
+      <TeamSectionTwo />
       {/*======  Start Contact Section  ======*/}
       <section
         className="orbia-contact_one bg_cover pt-120 pb-120"
