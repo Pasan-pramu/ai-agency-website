@@ -57,6 +57,10 @@ const MENU: MenuItem[] = [
       { label: "Team Details", href: "/team-details" },
       { label: "Pricing", href: "/pricing" },
       { label: "Faqs", href: "/faqs" },
+      // No /404 route exists: app/not-found.tsx is Next's not-found
+      // boundary, so this path genuinely 404s and renders the template's
+      // error page with a real 404 status. The entry is kept because the
+      // scope decision names only three nav items for deletion.
       { label: "404", href: "/404" },
     ],
   },

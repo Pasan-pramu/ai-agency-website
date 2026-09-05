@@ -116,6 +116,39 @@ with a single item, so `has-children` on it is redundant.
     CSS drives all visual output; React only toggles the same classes and
     attributes Bootstrap would have.   
 
+## Deliberate divergences from source
+
+These are intentional. Do not "correct" them.
+
+- `<html lang="en">` instead of the template's `lang="zxx"`.
+- Sticky header clears at `scrollY <= 5` rather than `=== 0`. `window.scrollY`
+  is a double and can hold fractional values on non-integer device pixel
+  ratios, where `=== 0` silently never matches. jQuery's `scrollTop()`
+  returned an integer, so the source had no such exposure.
+- `mail:info@exmple.com` (index.html:1166, home contact section) becomes a
+  valid `mailto:`. `team-details.html:184`'s bare email gains a `mailto:`
+  scheme. Neither is converted yet.
+- Three nav `<li>`s removed (index-2, index-3, blog-grid) and `has-children`
+  dropped from Home, per the scope decision. The `/404` nav entry is kept and
+  points at a path that genuinely 404s.
+- `.navbar-close` handlers not implemented — the class exists in `theme.js`
+  and `style.css` but in zero HTML files. Dead code, not ported.
+- Swiper's wrapper depth (`.swiper-wrapper`) differs from Slick's
+  (`.slick-list > .slick-track`). No in-scope rule depends on it.
+- `data-src` backgrounds render as server-side inline styles alongside the
+  preserved `data-src` attribute, reproducing what `dynamicBackground()`
+  (theme.js:431) produces at runtime, with no client JS and no unpainted frame.
+
+### Source bugs preserved on purpose
+
+- Resizing past 991px clears `overlay-open` but leaves `active` and `menu-on`,
+  so the next toggler click opens the overlay with the drawer shut.
+- On desktop the first chevron click writes inline `display:none`, which then
+  suppresses the CSS hover reveal.
+- Drawer CSS activates at 1199.98px but the resize handler uses 991px.
+- Parent nav items (Services, Pages, Blog) keep `href="#"` with no
+  `preventDefault`, so clicking jumps to top.
+
 ## TypeScript
 
 - Strict mode is on. Types serve the migration; the migration does not serve

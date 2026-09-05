@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The purchased template is read-only vendor code (AGENTS.md: never edit
+    // anything inside /template) and public/ holds byte-identical copies of its
+    // stylesheets. Linting either only produces noise about code we must not
+    // touch — it was drowning the project's own findings ~100:1.
+    "template/**",
+    "public/**",
   ]),
 ]);
 
